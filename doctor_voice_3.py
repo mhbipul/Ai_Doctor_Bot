@@ -135,28 +135,81 @@ def text_to_speech_with_gtts(input_text, output_path="gtts_output.mp3", autoplay
         print(f"[gTTS] Error: {e}")
 
 
-def text_to_speech_with_polly(input_text, output_path="polly_output.mp3", autoplay=True):
+# def text_to_speech_with_polly(input_text, output_path="polly_output.mp3", autoplay=True):
+#     """
+#     Converts input text to speech using Amazon Polly and saves it as an MP3 file.
+
+#     Args:
+#         input_text (str): Text to convert.
+#         output_path (str): Path to save the audio.
+#         autoplay (bool): Whether to play the audio automatically.
+#     """
+#     try:
+#         # Replace with secure handling in production
+#         polly_client = boto3.Session(
+#             aws_access_key_id='AKIAR4WHYKSIZU7AQFO2',
+#             aws_secret_access_key='OfXP6uSeWOeIOvGkf1E0+ekGzy3mnH3ldeM76yd7',
+#             region_name='us-east-1'
+#         ).client('polly')
+
+#         response = polly_client.synthesize_speech(
+#             Text=input_text,
+#             OutputFormat='mp3',
+#             VoiceId='Stephen',
+#             Engine='neural'
+#         )
+
+#         with open(output_path, 'wb') as file:
+#             file.write(response['AudioStream'].read())
+#         print(f"[Polly] Audio saved to {output_path}")
+
+#         if autoplay:
+#             playsound(output_path)
+
+#     except Exception as e:
+#         print(f"[Polly] Error: {e}")
+
+
+# updated polly code 
+def text_to_speech_with_polly(
+    input_text,
+    output_path="polly_output.mp3",
+    voice_id="Stephen",
+    engine="neural",
+    autoplay=True,
+    region="us-east-1",
+    aws_access_key_id='AKIAR4WHYKSIZU7AQFO2',
+    aws_secret_access_key='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',
+):
     """
     Converts input text to speech using Amazon Polly and saves it as an MP3 file.
 
     Args:
-        input_text (str): Text to convert.
-        output_path (str): Path to save the audio.
-        autoplay (bool): Whether to play the audio automatically.
+        input_text (str): Text to convert to speech.
+        output_path (str): File path where the MP3 audio will be saved.
+        voice_id (str): Polly voice ID to use (e.g., 'Joanna', 'Matthew', 'Stephen').
+        engine (str): Polly engine to use ('standard' or 'neural').
+        autoplay (bool): Whether to play the audio file automatically after saving.
+        region (str): AWS region for Polly service.
+        aws_access_key_id (str): AWS access key ID.
+        aws_secret_access_key (str): AWS secret access key.
+
+    Returns:
+        str: The path to the saved MP3 file, or None if an error occurred.
     """
     try:
-        # Replace with secure handling in production
-        polly_client = boto3.Session(
-            aws_access_key_id='AKIAR4WHYKSIZU7AQFO2',
-            aws_secret_access_key='OfXP6uSeWOeIOvGkf1E0+ekGzy3mnH3ldeM76yd7',
-            region_name='us-east-1'
-        ).client('polly')
+        polly_client = boto3.client(
+            'polly',
+            region_name=region,
+            aws_access_key_id=aws_access_key_id,
+            aws_secret_access_key=aws_secret_access_key
+        )
 
         response = polly_client.synthesize_speech(
             Text=input_text,
             OutputFormat='mp3',
-            VoiceId='Stephen',
-            Engine='neural'
+            VoiceId=voice_id,
+            Engine=engine
         )
 
         with open(output_path, 'wb') as file:
@@ -166,7 +219,8 @@ def text_to_speech_with_polly(input_text, output_path="polly_output.mp3", autopl
         if autoplay:
             playsound(output_path)
 
+        return output_path
+
     except Exception as e:
         print(f"[Polly] Error: {e}")
-
-
+        return None
