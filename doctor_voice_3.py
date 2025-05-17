@@ -178,8 +178,8 @@ def text_to_speech_with_polly(
     engine="neural",
     autoplay=True,
     region="us-east-1",
-    aws_access_key_id='AKIAR4WHYKSIZU7AQFO2',
-    aws_secret_access_key='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',
+    # aws_access_key_id='AKIAR4WHYKSIZU7AQFO2',
+    # aws_secret_access_key='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',
 ):
     """
     Converts input text to speech using Amazon Polly and saves it as an MP3 file.
